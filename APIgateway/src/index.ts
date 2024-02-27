@@ -7,6 +7,7 @@ import { UserModel } from "./model/User";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { DecodeToken, checkToken } from "./middlewares/checkToken";
+import { TokenBlackListModel } from "./model/TokenBlackList";
 
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
@@ -22,9 +23,10 @@ export const sequelize = new Sequelize({
 });
 
 export const User = UserModel(sequelize);
+export const TokenBlackList = TokenBlackListModel(sequelize);
 
-sequelize.sync({ force: true });
-// sequelize.sync();
+// sequelize.sync({ force: true });
+sequelize.sync();
 
 const app = express();
 app.use(cors());
@@ -55,7 +57,7 @@ app.post("/api/auth/register", async (req, res) => {
       const newUser = await User.create({ nom, email, mdp:hash });
       const newUserData = newUser.dataValues
       delete newUserData.mdp
-      const tokenJWT = jwt.sign({ data: 'foobar'}, 'secret', { expiresIn: '1h' });
+      const tokenJWT = jwt.sign({ data: 'foobar'}, process.env.JWT_SECRET!, { expiresIn: '1h' });
         res.status(200).send(tokenJWT);
     }
   }
@@ -95,8 +97,11 @@ app.get("/api/users", async (req, res) => {
   res.status(200).send(JSON.stringify(allUsers));
 })
 
-app.get("/me", checkToken, async (req, res) => {
+app.get("/api/users/me", checkToken, async (req, res) => {
   const decoded = jwt.decode(req.token!) as DecodeToken
+  console.log("req.token ",req.token!)
+  console.log("decoded ",decoded)
+  console.log("decoded.id ",decoded.id)
   const user = await User.findOne({ where: { id: decoded.id } });
   if (user) {
       delete user.dataValues.password;

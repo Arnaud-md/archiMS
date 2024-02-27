@@ -3,10 +3,21 @@ import jwt from "jsonwebtoken";
 import {Request, Response, NextFunction } from 'express';
 import {TokenBlackList} from "..";
 
+// export interface DecodeToken {
+//     id: number;
+//     username: string;
+//     email: string;
+//     iat: number;
+//     exp: number;
+// }
+
 export interface DecodeToken {
     id: number;
-    username: string;
+    nom: string;
     email: string;
+    mdp: string;
+    createdAt: string;
+    updatedAt: string;
     iat: number;
     exp: number;
 }
@@ -23,11 +34,10 @@ export async function checkToken(req: Request, res: Response, next: NextFunction
             res.status(401).send("Invalid token type");
         }
         else {
-            const isBlacklisted = await TokenBlackList.findOne({ where: { token } });
             const decoded = jwt.verify(token, process.env.JWT_SECRET!)
             console.log(decoded);
-            if (decoded && !isBlacklisted) {
-                req.token = token;
+            if (decoded) {
+                req.token = token
                 next();
             }
             else {

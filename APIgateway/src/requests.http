@@ -49,6 +49,11 @@ Content-Type: application/json
 }
 
 ###
+GET http://localhost:1222/api/users/
+###
+GET http://localhost:1222/api/users/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibm9tIjoiQXJuYXVkIiwiZW1haWwiOiJtb25FbWFpbCIsIm1kcCI6IiQyYiQxMCRUdVU5Ny9pcldNbWdIRmZxZWQ0b0RlaC5rUkkyUXN6dTg0NWhtUTd2LnJuQjNaMVNTT0V1YSIsImNyZWF0ZWRBdCI6IjIwMjQtMDItMjdUMTU6MjA6MjMuNjg0WiIsInVwZGF0ZWRBdCI6IjIwMjQtMDItMjdUMTU6MjA6MjMuNjg0WiIsImlhdCI6MTcwOTA0NzIyNSwiZXhwIjoxNzA5MDUwODI1fQ.9ihWWniRaao3-LM5btvvzbYKWrVdLrqKV8tqW0O0mg8
+###
 POST http://localhost:1337/api/auth/local/register
 Content-Type: application/json
 
